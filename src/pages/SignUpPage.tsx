@@ -5,8 +5,8 @@ import { Button } from "../components/ui/button";
 import { Card, CardContent, CardHeader } from "../components/ui/card";
 import { Input } from "../components/ui/input";
 import { SignUpFormSchema, type SignUpFormData } from "../lib/types";
-import { useSignupMutation } from "../api/chatify.api";
 import { LoaderIcon } from "lucide-react";
+import { useAuthStore } from "../store/useAuthStore";
 type Props = {};
 
 const SignUpPage = (props: Props) => {
@@ -15,14 +15,13 @@ const SignUpPage = (props: Props) => {
     handleSubmit,
     formState: { errors },
   } = useForm<SignUpFormData>({ resolver: zodResolver(SignUpFormSchema) });
-  const [signup, { isLoading, error, isSuccess }] = useSignupMutation();
+  const { signup, isSigningUp } = useAuthStore();
   const onsubmit = async (data: SignUpFormData) => {
     await signup(data);
   };
-
   return (
     <div>
-      <Card className="w-[400px] bg-[#ffffff]">
+      <Card className="sm:w-[100px] md:w-[400px] bg-[#ffffff]">
         <CardHeader>
           <h2 className="text-xl font-bold text-center">Sign Up</h2>
           <h3 className="text-center text-gray-500 text-sm">
@@ -72,7 +71,9 @@ const SignUpPage = (props: Props) => {
             </div>
             <Button className="bg-[#6366f2] cursor-pointer">
               Create Account{" "}
-              {isLoading && <LoaderIcon className="text-white animate-spin" />}
+              {isSigningUp && (
+                <LoaderIcon className="text-white animate-spin" />
+              )}
             </Button>
             <h3 className="text-xs text-gray-500 text-center">
               Already have an account?

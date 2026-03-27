@@ -1,12 +1,13 @@
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { Button } from "../components/ui/button";
 import { Card, CardContent, CardHeader } from "../components/ui/card";
 import { Input } from "../components/ui/input";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { type LoginFormData, LoginFormSchema } from "../lib/types";
-import { useLoginMutation } from "../api/chatify.api";
 import { LoaderIcon } from "lucide-react";
+import toast from "react-hot-toast";
+import { useAuthStore } from "../store/useAuthStore";
 type Props = {};
 
 const LoginPage = (props: Props) => {
@@ -15,10 +16,12 @@ const LoginPage = (props: Props) => {
     handleSubmit,
     formState: { errors },
   } = useForm<LoginFormData>({ resolver: zodResolver(LoginFormSchema) });
-  const [login, { isLoading, error, isSuccess }] = useLoginMutation();
+  const { login, isLoading } = useAuthStore();
   const onsubmit = async (data: LoginFormData) => {
     await login(data);
+    toast.success("Logged in successfully");
   };
+
   return (
     <div>
       <Card className="w-[400px] bg-[#ffffff]">
